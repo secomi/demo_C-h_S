@@ -1,0 +1,12 @@
+@node Version History
+@appendix Version History
+
+@table @dfn
+@item Version 1.0.0, July 19, 2023
+@itemize
+@item
+Initial demo repository with basic CSS for HTML page generated with the
+@command{makeinfo} command from GNU Texinfo 7.0.3
+@end itemize
+
+@end table

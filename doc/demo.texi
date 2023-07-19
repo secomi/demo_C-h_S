@@ -1,0 +1,325 @@
+\input texinfo      @c -*-texinfo-*-
+@include version.texi
+
+@c %**start of header
+@setfilename demo.info
+@settitle Demo C-h S Manual @value{VERSION}
+@documentencoding UTF-8
+@documentlanguage en
+@setchapternewpage off
+
+@c Tell install-info what to do.
+@dircategory Programs
+@direntry
+* demo_C-h_S: (demo).                 Demo symbols reachable with C-h S
+@end direntry
+
+
+@copying
+This is the @cite{demo C-h S Manual} (version @value{VERSION}, @value{UPDATED}).
+
+@copyright{} 2023 demo
+
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3 of the License, or (at your
+option) any later version. The text of the license can be found in the
+section entitled ``Copying''.
+@end quotation
+@end copying
+
+
+@c Titlepage
+@titlepage
+@title Demo C-h S Manual
+@subtitle Version @value{VERSION}
+
+@sp 3
+
+@author author name (@email{email@@domain.com})
+
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c remove table of content
+@c @contents
+
+@ifnottex
+@node Top
+@top Demo C-h S reference Manual
+@insertcopying
+
+@noindent
+This manual is an example to demonstrate how to use Emacs
+@command{info-lookup-symbol} frequently bound to @key{C-h S}, for a
+custom library or application.
+@end ifnottex
+
+
+@menu
+* Demo program a box with two position::
+* Various related functions::   Functions related to box
+* Data type Index::             Index of the data types
+* Function Index::              Index of the functions
+* Variable Index::              Index of the variables
+* File Index::                  Index of the files and programs
+@end menu
+
+
+@node Demo program a box with two position
+@chapter Demo Program: a box with two position
+
+@section Purpose
+The purpose of the demo is to test @command{info-lookup-symbol} and
+function lookup to access relevant documentation from the info file.
+
+@section Emacs configuration
+
+Install @code{info-lookmore.el} from
+@url{https://github.com/emacsmirror/info-lookmore} in emacs load-path.
+
+Then add the documentation function's index definition to the list of
+documentation symbol.
+
+Here is an example for @code{c-mode}:
+
+@example lisp
+@group
+(use-package info-lookmore
+  :load-path "~/.emacs.d/custom/"
+  :config
+  (info-lookmore-add-doc 'symbol 'c-mode
+                         '("(demo)Function Index" nil
+		           "^[ \t]+-+ \\(Function\\|Macro\\): .*\\<" "\\>")))
+@end group
+@end example
+
+Adding a new symbol list to the selected mode will reset the Emacs
+symbol cache.
+
+It might be convenient to run @command{info-lookup-reset} when the
+documentation is adjusted/updated in order for Emacs to rediscover all
+the symbols and functions and data types.
+
+Note that @command{info-lookmore} also provides lots of pre-configured
+interactive function to load desired documentation.
+
+
+
+@section Install the info file
+The library / application needs to be installed and available as part of
+the @code{directory}. To do so use, the @command{install-info}
+
+@example bash
+@group
+ $ install-info demo.info dir
+@end group
+@end example
+
+Ensure emacs or the system contains the info directory to look for.
+This can be achieved either by updating the environment variable
+@code{INFOPATH} in the @code{.bashrc} or @code{.profile} home
+configuration files.
+
+@example bash
+@group
+export INFOPATH="$@{HOME@}/demo/doc/:/usr/share/info/emacs:/usr/share/info/:/usr/share/info/"
+@end group
+@end example
+
+or updating the @var{Info-directory-list} of emacs
+
+@example lisp
+@group
+(use-package info
+  :config
+  (add-to-list 'Info-directory-list "/path/to/demo_C-h_S/doc")
+)
+@end group
+@end example
+
+@section How to use
+In order to get the definition of a symbol or function, place the cursor
+and use the command @command{M-x info-lookup-symbol} bound by default to
+@key{C-h S}
+
+
+Emacs will then open a buffer and display the documentation.
+
+@node Various related functions
+@chapter Various related functions
+
+@menu
+* box::                         Box related functions 
+@end menu
+
+@node box
+@section box
+@subsection includes
+@pindex box.h
+
+@example c
+@group
+#include "box.h"
+@end group
+@end example
+
+@subsection Description
+This section describes a number of utility functions for creating,
+managing and deleting @code{box}.
+
+@subsection Example
+
+@example c
+@group
+#include "box.h"
+
+int
+main (int argc, char *argv[])
+@{
+  box *b = box_create ("my package");
+
+  box_object_add (b, POSITION1, "pen", 10);
+  box_print (b);
+  box_free (b);
+@}
+@end group
+@end example
+
+
+@subsection Functions and data types
+@deftp {Data Type} {struct box}
+This structure @code{struct box} is used to hold information on the
+content of the box.  It has the following members:
+
+@table @code
+@item  guint weight
+Total weight of the box.
+
+@item gchar *description
+The description of the box. 
+
+@item gchar *object1
+Name of the first object located in the box. 
+
+@item gchar *object2
+Name of the second object located in the box. 
+@end table
+@end deftp
+
+
+@deftp {Data Type} {enum position}
+The status of an account. Here are the possible values:
+
+@table @var
+@item POSITION1
+@vindex POSITION1
+First position in the box. 
+
+@item POSITION2
+@vindex POSITION2
+Second position in the box. 
+@end table
+@end deftp
+
+
+@deftypefun {box *}box_create (const gchar *@var{description})
+Creates an empty new container with 2 possibile positions
+
+The returned @code{box} should be freed with @code{box_free} when no
+longer needed.
+
+@b{Parameters:}
+@table @var
+@item description
+The description of the box
+@end table
+
+@b{Returns}
+A newly allocated box, to be freed by the caller.
+@end deftypefun
+
+
+@deftypefun {void} box_free (box *@var{b})
+Frees the memory pointed by b
+
+@b{Parameters:}
+@table @asis
+@item @var{b}
+The box to free
+@end table
+@end deftypefun
+
+
+
+@deftypefun {void} box_print (box *@var{b})
+Print the content of the box.
+
+@b{Parameters:}
+@table @asis
+@item @var{b}
+The box to free
+@end table
+@end deftypefun
+
+
+@deftypefun gboolean box_object_add @
+            (box *@var{b}, position @var{p}, @
+            const gchar *@var{object}, guint @var{weight})
+            
+Add an object to a specific box position.
+
+@b{Parameters:}
+@table @asis
+@item @var{b}
+The box where the object will be added to
+
+@item @var{p}
+The position where the object will be added.
+
+@item @var{object}
+A description of the object
+
+@item @var{weight}
+The weight of the object. The weight will be added to the box @code{weight}.
+@end table
+
+@b{Returns:}
+@table @asis
+@item @code{TRUE}
+if no error and the object has been added or replaced at the requested
+position.
+
+@item @code{FALSE}
+If there was an error when adding or replacing the object at the
+specific position.
+@end table
+@end deftypefun
+
+
+
+@include changelog.texi
+@include gpl.texi
+
+@c Indexes
+@node Data type Index
+@unnumbered Data type Index
+@printindex tp
+
+@node Function Index
+@unnumbered Function and Macro Index
+@printindex fn
+
+@node Variable Index
+@unnumbered Variable and Constant Macro Index
+@printindex vr
+
+@node File Index
+@unnumbered Program and File Index
+@printindex pg
+
+@bye
