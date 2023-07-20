@@ -49,7 +49,7 @@ Now when needed to look for the documentation of a function at point,
 press `C-h S` and Emacs will display the info file at the current
 function/data type index.
 
-![](https://github.com/secomi/demo_C-h_S/tree/master/doc/screencast.gif)
+![](https://github.com/secomi/demo_C-h_S/blob/master/doc/screencast.gif)
 
 
 ### HTML preview
