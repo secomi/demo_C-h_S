@@ -11,6 +11,10 @@ typedef struct box
   gchar *object2;
 } box;
 
+
+/*
+ * available position in the box
+ */
 typedef enum position
 {
   POSITION1 = 1,
@@ -43,6 +47,22 @@ box *box_create (const gchar *description);
 void box_free (box *b);
 
 
+/*
+ * Add an object to a specific box position.
+ *
+ * Parameters:
+ * - b: The box where the object will be added to
+ * - p: The position where the object will be added.
+ * - object: A description of the object
+ * - weight: the weight of the object being added.
+ *           the weigt will be added to the total weight of
+ *           the box.
+ *
+ * Returns:
+ * - TRUE: the object has been successfuly added
+ * - FALSE: there was an error adding the object to the box.
+ *
+ */
 gboolean box_object_add (box *b, position p, const gchar *object, guint weight);
 
 /*
