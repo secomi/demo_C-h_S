@@ -24,8 +24,8 @@ gboolean
 box_object_add (box *b, position p, const gchar *object, guint weight)
 {
 
-  g_return_val_if_fail (b, FALSE); /* the box should exist */
-  g_return_val_if_fail (object, FALSE); /* object name should not be null */
+  g_return_val_if_fail (b, FALSE);
+  g_return_val_if_fail (object, FALSE);
 
   /*  add or overwrite */
   switch (p) {
@@ -54,6 +54,7 @@ box_object_add (box *b, position p, const gchar *object, guint weight)
 void
 box_print (box *b)
 {
+  g_return_if_fail (b);
 
   g_printf ("Box \"%s\" with:\n"
             "Object1: %s\n"
